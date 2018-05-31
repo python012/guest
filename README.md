@@ -1,3 +1,3 @@
-# guest
+# Guest
 
-A web project based on Django.
+A Web project based on Django, used for Web programming, Web API testing etc.
