@@ -7,6 +7,16 @@
     <title>Django Page</title>
 </head>
 <body>
-    <h1>Great Django Page!</h1>
+    <h1>发布会管理</h1>
+    <form action="/login_action/" method="POST">
+        <input type="text" name="username" placeholder="username">
+        <br>
+        <input type="password" name="password" placeholder="password">
+        <br>
+        {{ error_message }}
+        <br>
+        <button id="btn" type="submit">登录</button>
+        {% csrf_token %}
+    </form>
 </body>
 </html>
