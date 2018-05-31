@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Django Page</title>
+    <style type="text/css">
+         .center {
+            text-align: center;
+         }
+      </style>
+    <title>发布会管理登陆</title>
 </head>
 <body>
-    <h1>发布会管理</h1>
-    <form action="/login_action/" method="POST">
+    <h1 class="center">发布会管理</h1>
+    <form class="center" action="/login_action/" method="POST">
         <input type="text" name="username" placeholder="username">
         <br>
         <input type="password" name="password" placeholder="password">
