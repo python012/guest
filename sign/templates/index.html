@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <style type="text/css">
-         .center {
+        .center {
             text-align: center;
-         }
-      </style>
+        }
+    </style>
     <title>发布会管理登陆</title>
 </head>
+
 <body>
     <h1 class="center">发布会管理</h1>
     <form class="center" action="/login_action/" method="POST">
         <input type="text" name="username" placeholder="username">
         <br>
         <input type="password" name="password" placeholder="password">
-        <br>
-        {{ error_message }}
+        <br> {{ error_message }}
         <br>
         <button id="btn" type="submit">登录</button>
         {% csrf_token %}
     </form>
 </body>
+
 </html>

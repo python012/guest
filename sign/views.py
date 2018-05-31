@@ -23,7 +23,7 @@ def login_action(request):
             response = HttpResponseRedirect('/event_manager/')
             return response
         else:
-            return render(request, 'index.html', {'error_message': 'username or password is not correct!'})            
+            return render(request, 'index.html', {'error_message': 'username or password is not correct!'})
 
         # if username == 'admin' and password == 'admin123':
             # return HttpResponse('Login success!')
@@ -35,8 +35,9 @@ def login_action(request):
         # else:
             # return render(request, 'index.html', {'error_message': 'username or password is not correct!'})
 
+
 @login_required
 def event_manager(request):
     # username = request.COOKIES.get('user', '') # read the cookie from browser
-    username = request.session.get('user', '') # read browser session
-    return render(request, "event_manager.html", {"user":username})
+    username = request.session.get('user', '')  # read browser session
+    return render(request, "event_manager.html", {"user": username})
