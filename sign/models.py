@@ -19,6 +19,8 @@ class Event(models.Model):
     start_time = models.DateTimeField('events time')    # 发布会开始时间
     create_time = models.DateTimeField(auto_now=True)   # 创建时间，自动获取当前时间
 
+    objects = models.Manager() # fix the issue of Event has no attribute 'objects'
+
     def __str__(self):
         return self.name
 
