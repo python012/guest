@@ -19,7 +19,7 @@ class Event(models.Model):
     start_time = models.DateTimeField('events time')    # 发布会开始时间
     create_time = models.DateTimeField(auto_now=True)   # 创建时间，自动获取当前时间
 
-    objects = models.Manager() # fix the issue of Event has no attribute 'objects'
+    objects = models.Manager() # fix the issue of CustomModel(models.Model) has no attribute 'objects'
 
     def __str__(self):
         return self.name
@@ -35,6 +35,8 @@ class Guest(models.Model):
     email = models.EmailField()                        # 电子邮箱
     sign = models.BooleanField()                       # 签到状态
     create_time = models.DateTimeField(auto_now=True)  # 创建时间，自动获取当前时间
+
+    objects = models.Manager() # fix the issue of CustomModel(models.Model) has no attribute 'objects'
 
     class Meta:
         unique_together = ("event", "phone")           # 设置2个字段为联合主键
