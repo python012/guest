@@ -1,6 +1,6 @@
 # Guest
 
-A Web project based on Django, used for Web programming, Web API testing etc.
+A Web project based on Django, used for Web programming and Web API testing practice.
 
 Installed apps:
 
@@ -22,3 +22,5 @@ How to install mysql in Ubuntu 16.04 and enable remote-access:
 Setup:
 
 - Mysql service is required, IP address, user name and password need be configured in guest/settings.py as part of DATABASES configuraiton.
+- `mysql> create database guest character set utf8;` to init guest database in Mysql at very beiginning.
+- `python3 manage.py createsuperuser` to create super user account.

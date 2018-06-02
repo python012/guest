@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from sign.models import Event
 
 
 # Create your views here.
@@ -40,4 +41,6 @@ def login_action(request):
 def event_manager(request):
     # username = request.COOKIES.get('user', '') # read the cookie from browser
     username = request.session.get('user', '')  # read browser session
-    return render(request, "event_manager.html", {"user": username})
+    event_list = Event.objects.all()
+    # return render(request, "event_manager.html", {"user": username})
+    return render(request, "event_manager.html", {"user": username, "events": event_list})
