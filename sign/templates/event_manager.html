@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     {% load bootstrap3 %}
     {% bootstrap_css %}
@@ -10,7 +9,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>发布会管理</title>
 </head>
-
 <body role="document">
     <!-- nav bar -->
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -31,8 +29,20 @@
         </div>
     </nav>
 
+    <!-- search function -->
+    <div class="page-header" style="padding-top: 60px;">
+        <div id="search-bar" class="navbar-collapse collapse">
+            <form action="/search_name/" class="navbar-form" method="GET">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="名称">
+                </div>
+                <button type="submit" class="btn btn-success">搜索</button>
+            </form>
+        </div>
+    </div>
+
     <!-- conference list -->
-    <div class="row" style="padding-top: 80px;">
+    <div class="row" style="padding-top: 10px;">
         <div class="col-md-6">
             <table class="table table-striped">
                 <thead>
