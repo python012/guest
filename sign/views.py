@@ -21,15 +21,15 @@ def login_action(request):
         if user is not None:
             auth.login(request, user)
             request.session['user'] = username
-            response = HttpResponseRedirect('/event_manager/')
+            response = HttpResponseRedirect('/event_manage/')
             return response
         else:
             return render(request, 'index.html', {'error_message': 'username or password is not correct!'})
 
         # if username == 'admin' and password == 'admin123':
             # return HttpResponse('Login success!')
-            # return HttpResponseRedirect('/event_manager/')
-            # response = HttpResponseRedirect('/event_manager/')
+            # return HttpResponseRedirect('/event_manage/')
+            # response = HttpResponseRedirect('/event_manage/')
             # response.set_cookie('user', username, 3600) # add browser cookie
             # request.session['user'] = username
             # return response
@@ -38,12 +38,12 @@ def login_action(request):
 
 
 @login_required
-def event_manager(request):
+def event_manage(request):
     # username = request.COOKIES.get('user', '') # read the cookie from browser
     username = request.session.get('user', '')  # read browser session
     event_list = Event.objects.all()
-    # return render(request, "event_manager.html", {"user": username})
-    return render(request, "event_manager.html", {"user": username, "events": event_list})
+    # return render(request, "event_manage.html", {"user": username})
+    return render(request, "event_manage.html", {"user": username, "events": event_list})
 
 
 @login_required
@@ -51,4 +51,4 @@ def search_name(request):
     username = request.session.get('user', '')
     search_name = request.GET.get("name", "")
     event_list = Event.objects.filter(name__contains=search_name)
-    return render(request, "event_manager.html", {"user": username, "events": event_list})
+    return render(request, "event_manage.html", {"user": username, "events": event_list})
