@@ -1,10 +1,10 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from sign.models import Event
-from sign.models import Guest
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+
+from sign.models import Event, Guest
 
 
 # Create your views here.
@@ -54,15 +54,39 @@ def search_name(request):
     event_list = Event.objects.filter(name__contains=search_name)
     return render(request, "event_manage.html", {"user": username, "events": event_list})
 
+
 @login_required
 def guest_manage(request):
     username = request.session.get('user', '')
     guest_list = Guest.objects.all()
-    return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
+
+    paginator = Paginator(guest_list, 3)
+    page_number = request.GET.get('page')
+
+    try:
+        contacts = paginator.page(page_number)
+    except PageNotAnInteger:
+        contacts = paginator.page(1)
+    except EmptyPage:
+        contacts = paginator.page(paginator.num_pages)
+
+    return render(request, "guest_manage.html", {"user": username, "guests": contacts})
+
 
 @login_required
 def search_guest(request):
     username = request.session.get('user', '')
     search_name = request.GET.get("name", "")
     guest_list = Guest.objects.filter(realname__contains=search_name)
-    return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
+
+    paginator = Paginator(guest_list, 3)
+    page_number = request.GET.get('page')
+
+    try:
+        contacts = paginator.page(page_number)
+    except PageNotAnInteger:
+        contacts = paginator.page(1)
+    except EmptyPage:
+        contacts = paginator.page(paginator.num_pages)
+
+    return render(request, "guest_manage.html", {"user": username, "guests": contacts})
