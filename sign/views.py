@@ -145,6 +145,11 @@ def sign_index_action(request, eid):
         return render(request, 'sign_index.html', {'event': event, 
                                                    'hint': 'user sign in successfully!', 
                                                    'guest': result, 
-                                                   'sign': True,
                                                    'all': all_num,
                                                    'all_unsigned': all_unsigned_num})
+
+
+@login_required
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect('/index/')
