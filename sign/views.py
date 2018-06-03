@@ -2,7 +2,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from sign.models import Event, Guest
 
@@ -90,3 +90,33 @@ def search_guest(request):
         contacts = paginator.page(paginator.num_pages)
 
     return render(request, "guest_manage.html", {"user": username, "guests": contacts})
+
+
+@login_required
+def sign_index(request, eid):
+    event = get_object_or_404(Event, id=eid)
+    return render(request, 'sign_index.html', {'event': event})
+
+
+@login_required
+def sign_index_action(request, eid):
+    event = get_object_or_404(Event, id=eid)
+    phone_number = request.POST.get('phone', '')
+    result = Guest.objects.filter(phone=phone_number)
+    
+    if not result:
+        return render(request, 'sign_index.html', {'event': event, 'hint': 'phone number error'})
+    
+    # guest may attend more than one conference in the event list
+    result = Guest.objects.filter(phone=phone_number, event_id=eid)
+
+    if not result: # guest did not attent this event of eid
+        return render(request, 'sign_index.html', {'event': event, 'hint': 'phone number or event id error'})
+    
+    result = list(result)[0] # todo, assume no duplicate phone number in an event
+
+    if result.sign:
+        return render(request, 'sign_index.html', {'event': event, 'hint': 'user already sign in'})
+    else:
+        Guest.objects.filter(phone=phone_number, event_id=eid).update(sign='1')
+        return render(request, 'sign_index.html', {'event': event, 'hint': 'user sign in successfully!', 'guest': result})
