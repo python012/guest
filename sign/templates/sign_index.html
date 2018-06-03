@@ -37,13 +37,29 @@
                     <input type="text" name="phone" placeholder="输入手机号" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-success">签到</button>
-                <font color="red">
-                    <br>{{ hint }}
-                    <br>{{ guest.realname }}
-                    <br>{{ guest.phone }}
+
+                {% if all_unsigned == 0 %}
+                <font color="green">
+                        <br>{{ hint }}
+                        <br>{{ guest.realname }}
+                        <br>{{ guest.phone }}
                 </font>
+                <div class="lead" id="unsign-status" style="color: green">
+                        {{ all_unsigned }} / {{ all }} unsign
+                </div>
+                {% else %}
+                <font color="red">
+                        <br>{{ hint }}
+                        <br>{{ guest.realname }}
+                        <br>{{ guest.phone }}
+                </font>
+                <div class="lead" id="unsign-status" style="color: red">
+                        {{ all_unsigned }} / {{ all }} unsign
+                </div>
+                {% endif %}
                 {% csrf_token %}
             </form>
+
         </div>
     </div>
 </body>

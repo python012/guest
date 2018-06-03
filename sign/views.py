@@ -95,7 +95,11 @@ def search_guest(request):
 @login_required
 def sign_index(request, eid):
     event = get_object_or_404(Event, id=eid)
-    return render(request, 'sign_index.html', {'event': event})
+    all_num = len(Guest.objects.filter(event_id=eid))
+    all_unsigned_num = len(Guest.objects.filter(event_id=eid, sign=False))
+    return render(request, 'sign_index.html', {'event': event, \
+                                               'all': all_num, \
+                                               'all_unsigned': all_unsigned_num})
 
 
 @login_required
@@ -103,20 +107,44 @@ def sign_index_action(request, eid):
     event = get_object_or_404(Event, id=eid)
     phone_number = request.POST.get('phone', '')
     result = Guest.objects.filter(phone=phone_number)
-    
+
+    all_num = len(Guest.objects.filter(event_id=eid))
+    all_unsigned_num = len(Guest.objects.filter(event_id=eid, sign=False))
+
     if not result:
-        return render(request, 'sign_index.html', {'event': event, 'hint': 'phone number error'})
+        return render(request, 'sign_index.html', {'event': event,
+                                                   'hint': 'phone number error',
+                                                   'all': all_num,
+                                                   'all_unsigned': all_unsigned_num})
     
     # guest may attend more than one conference in the event list
     result = Guest.objects.filter(phone=phone_number, event_id=eid)
 
     if not result: # guest did not attent this event of eid
-        return render(request, 'sign_index.html', {'event': event, 'hint': 'phone number or event id error'})
+        return render(request, 'sign_index.html', {'event': event,
+                                                   'hint': 'phone number or event id error',
+                                                   'all': all_num,
+                                                   'all_unsigned': all_unsigned_num})
+
+    if len(result) > 1:
+        return render(request, 'sign_index.html', {'event': event,
+                                                   'hint': 'duplicate phone number record found',
+                                                   'all': all_num,
+                                                   'all_unsigned': all_unsigned_num})
     
-    result = list(result)[0] # todo, assume no duplicate phone number in an event
+    result = list(result)[0]
 
     if result.sign:
-        return render(request, 'sign_index.html', {'event': event, 'hint': 'user already sign in'})
+        return render(request, 'sign_index.html', {'event': event,
+                                                   'hint': 'user already sign in',
+                                                   'all': all_num,
+                                                   'all_unsigned': all_unsigned_num})
     else:
         Guest.objects.filter(phone=phone_number, event_id=eid).update(sign='1')
-        return render(request, 'sign_index.html', {'event': event, 'hint': 'user sign in successfully!', 'guest': result})
+        all_unsigned_num = len(Guest.objects.filter(event_id=eid, sign=False))
+        return render(request, 'sign_index.html', {'event': event, 
+                                                   'hint': 'user sign in successfully!', 
+                                                   'guest': result, 
+                                                   'sign': True,
+                                                   'all': all_num,
+                                                   'all_unsigned': all_unsigned_num})
