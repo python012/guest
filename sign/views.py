@@ -27,17 +27,6 @@ def login_action(request):
         else:
             return render(request, 'index.html', {'error_message': 'username or password is not correct!'})
 
-        # if username == 'admin' and password == 'admin123':
-            # return HttpResponse('Login success!')
-            # return HttpResponseRedirect('/event_manage/')
-            # response = HttpResponseRedirect('/event_manage/')
-            # response.set_cookie('user', username, 3600) # add browser cookie
-            # request.session['user'] = username
-            # return response
-        # else:
-            # return render(request, 'index.html', {'error_message': 'username or password is not correct!'})
-
-
 @login_required
 def event_manage(request):
     # username = request.COOKIES.get('user', '') # read the cookie from browser
@@ -60,7 +49,7 @@ def guest_manage(request):
     username = request.session.get('user', '')
     guest_list = Guest.objects.all()
 
-    paginator = Paginator(guest_list, 3)
+    paginator = Paginator(guest_list, 6)
     page_number = request.GET.get('page')
 
     try:
@@ -79,7 +68,7 @@ def search_guest(request):
     search_name = request.GET.get("name", "")
     guest_list = Guest.objects.filter(realname__contains=search_name)
 
-    paginator = Paginator(guest_list, 3)
+    paginator = Paginator(guest_list, 6)
     page_number = request.GET.get('page')
 
     try:

@@ -68,7 +68,11 @@
                         <td>{{ guest.realname }}</td>
                         <td>{{ guest.phone }}</td>
                         <td>{{ guest.email }}</td>
-                        <td>{{ guest.sign }}</td>
+                        {% if guest.sign %}
+                        <td style="color: green">已签到</td>
+                        {% else %}
+                        <td style="color:red">未签到</td>
+                        {% endif %}
                         <td>{{ guest.event }}</td>
                     </tr>
                     {% endfor %}
@@ -81,13 +85,13 @@
     <div class="pagination">
         <span class="step-links">
             {% if guests.has_previous %}
-                <a href="?page={{ guests.previous_page_number }}">previous</a>
+                <a href="?page={{ guests.previous_page_number }}">上一页</a>
             {% endif %}
                 <span class="current">
                     Page {{ guests.number }} of {{ guests.paginator.num_pages }}
                 </span>
             {% if guests.has_next %}
-                <a href="?page={{ guests.next_page_number }}">next</a>
+                <a href="?page={{ guests.next_page_number }}">下一页</a>
             {% endif %}
         </span>
     </div>

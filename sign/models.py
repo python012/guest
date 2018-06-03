@@ -29,7 +29,7 @@ class Guest(models.Model):
     """
     model for the guest
     """
-    event = models.ForeignKey(Event)                   # 关联发布会id
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)                   # 关联发布会id
     realname = models.CharField(max_length=64)         # 姓名
     phone = models.CharField(max_length=16)            # 手机号
     email = models.EmailField()                        # 电子邮箱
