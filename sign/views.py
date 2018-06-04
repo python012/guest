@@ -27,6 +27,7 @@ def login_action(request):
         else:
             return render(request, 'index.html', {'error_message': 'username or password is not correct!'})
 
+
 @login_required
 def event_manage(request):
     # username = request.COOKIES.get('user', '') # read the cookie from browser
@@ -125,15 +126,15 @@ def sign_index_action(request, eid):
 
     if result.sign:
         return render(request, 'sign_index.html', {'event': event,
-                                                   'hint': 'user already sign in',
+                                                   'hint': 'guest already sign in',
                                                    'all': all_num,
                                                    'all_unsigned': all_unsigned_num})
     else:
         Guest.objects.filter(phone=phone_number, event_id=eid).update(sign='1')
         all_unsigned_num = len(Guest.objects.filter(event_id=eid, sign=False))
-        return render(request, 'sign_index.html', {'event': event, 
-                                                   'hint': 'user sign in successfully!', 
-                                                   'guest': result, 
+        return render(request, 'sign_index.html', {'event': event,
+                                                   'hint': 'guest sign in successfully!',
+                                                   'guest': result,
                                                    'all': all_num,
                                                    'all_unsigned': all_unsigned_num})
 
