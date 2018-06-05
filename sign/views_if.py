@@ -1,10 +1,8 @@
-""".,./
-For event interface
-"""
-
 from django.http import JsonResponse
-from sign.models import Event
+from sign.models import Event, Guest
 from django.core.exceptions import ValidationError
+from django.db.utils import IntegrityError
+import time
 
 
 def add_event(request):
@@ -36,43 +34,58 @@ def add_event(request):
                              limit=limit,
                              address=address,
                              start_time=start_time)
-    except ValidationError as e:
+    except ValidationError:
         error = 'start_time formate error, should be YYYY-MM-DD HH:MM:SS fromat.'
         return JsonResponse({'status': 10024, 'message': error})
 
     return JsonResponse({'status': 200, 'message': 'add event success'})
 
 
-# def add_guest(request):
-#     eid = request.POST.get('eid', '')
-#     realname = request.POST.get('realname', '')
-#     phone = request.POST.get('phone', '')
-#     email = request.POST.get('email', '')
-#     sign = request.POST.get('sign', '')
+def add_guest(request):
+    eid = request.POST.get('eid', '')
+    realname = request.POST.get('realname', '')
+    phone = request.POST.get('phone', '')
+    email = request.POST.get('email', '')
+    # sign = request.POST.get('sign', '')
 
-#     if eid == '' or realname == '' or phone == '':
-#         return JsonResponse({'status': 10021, 'message': 'parameter error'})
+    if eid == '' or realname == '' or phone == '':
+        return JsonResponse({'status': 10021, 'message': 'parameter error'})
 
-#     result = Event.objects.filter(id=eid)
-#     if result:
-#         return JsonResponse({'status': 10022, 'message':'event id already exists'})
+    result = Event.objects.filter(id=eid)
+    if not result:
+        return JsonResponse({'status': 10022, 'message':'event id is invalid'})
 
-#     result = Event.objects.filter(name=name)
-#     if result:
-#         return JsonResponse({'status': 10023, 'message':'event name already exists'})
+    result = Event.objects.filter(name=eid).status
+    
+    if not result:
+        return JsonResponse({'status': 10023, 'message':'event status is not available'})
+    
+    event_limit = Event.objects.get(id=eid).limit
+    guest_limit = len(Guest.objects.filter(event_id=eid))
 
-#     if status == '':
-#         status = 1
+    if guest_limit >= event_limit:
+        return JsonResponse({'status': 10024, 'message':'event number is full'})
+    
+    event_time = Event.objects.get(id=eid).start_time
+    
+    etime = str(event_time).split(".")[0]
+    timeArray = time.strptime(etime, "%Y-%m-%d %H:%M:%S")
+    e_time = int(time.mktime(timeArray))
 
-#     try:
-#         Event.objects.create(id=eid,
-#                              name=name,
-#                              status=int(status),
-#                              limit=limit,
-#                              address=address,
-#                              start_time=start_time)
-#     except ValidationError as e:
-#         error = 'start_time formate error, should be YYYY-MM-DD HH:MM:SS fromat.'
-#         return JsonResponse({'status': 10024, 'message': error})
+    now_time = str(time.time())
+    ntime = now_time.split(".")[0]
+    n_time = int(ntime)
 
-#     return JsonResponse({'status': 200, 'message': 'add event success'})
+    if n_time >= e_time:
+        return JsonResponse({'status': 10025, 'message':'event is out of date'})
+    
+    try:
+        Guest.objects.create(event_id=eid,
+                             realname=realname,
+                             phone=int(phone),
+                             email=email,
+                             sign=False)
+    except IntegrityError:
+        return JsonResponse({'status': 10026, 'message': 'the event guest phone number repeat'})
+
+    return JsonResponse({'status': 200, 'message': 'add event success'})
