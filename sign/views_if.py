@@ -56,18 +56,18 @@ def add_guest(request):
         return JsonResponse({'status': 10022, 'message':'event id is invalid'})
 
     result = Event.objects.filter(name=eid).status
-    
+
     if not result:
         return JsonResponse({'status': 10023, 'message':'event status is not available'})
-    
+
     event_limit = Event.objects.get(id=eid).limit
     guest_limit = len(Guest.objects.filter(event_id=eid))
 
     if guest_limit >= event_limit:
         return JsonResponse({'status': 10024, 'message':'event number is full'})
-    
+
     event_time = Event.objects.get(id=eid).start_time
-    
+
     etime = str(event_time).split(".")[0]
     timeArray = time.strptime(etime, r"%Y-%m-%d %H:%M:%S")
     e_time = int(time.mktime(timeArray))
@@ -78,7 +78,7 @@ def add_guest(request):
 
     if n_time >= e_time:
         return JsonResponse({'status': 10025, 'message':'event is out of date'})
-    
+
     try:
         Guest.objects.create(event_id=eid,
                              realname=realname,
@@ -91,13 +91,71 @@ def add_guest(request):
     return JsonResponse({'status': 200, 'message': 'add event success'})
 
 
+def get_event_list(request):
+    eid = request.GET.get('eid', '')
+    name = request.GET.get('name', '')
+
+    if not eid:
+        if not name:
+            return JsonResponse({'status': 10021, 'message': 'parameter error'})
+
+        results = Event.objects.filter(name__contains=name)
+
+        if not len(results):
+            return JsonResponse({'status': 10022, 'message': 'query result is empty'})
+        else:
+            datas = []
+            for r in results:
+                event = {}
+                event['id'] = r.id
+                event['name'] = r.name
+                event['status'] = r.name
+                event['address'] = r.address
+                event['start_time'] = r.start_time
+                datas.append(event)
+            return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
+    else:
+        result = Event.objects.get(id=eid)
+        if not result:
+            return JsonResponse({'status': 10022, 'message': 'query result is empty'})
+        else:
+            result = Event.objects.get(id=eid).status
+            if not result:
+                return JsonResponse({'status': 10023, 'message': 'event status is not available'})
+            else:
+                if not name:
+                    r = Event.objects.get(id=eid)
+                    event = {}
+                    event['id'] = r.id
+                    event['name'] = r.name
+                    event['status'] = r.status
+                    event['address'] = r.address
+                    event['start_time'] = r.start_time
+                    return JsonResponse({'status': 200, 'message': event})
+                else:
+                    results = Event.objects.filter(id=eid, name=name)
+                    if not len(results):
+                        return JsonResponse({'status': 10022, 'message': 'query result is empty'})
+                    else:
+                        datas = []
+                        for r in results:
+                            event = {}
+                            event['id'] = r.id
+                            event['name'] = r.name
+                            event['status'] = r.status
+                            event['address'] = r.address
+                            event['start_time'] = r.start_time
+                            datas.append(event)
+                        return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
+
+
 def get_guest_list(request):
     eid = request.GET.get('eid', '')
     phone = request.GET.get('phone', '')
 
     if eid == '':
         return JsonResponse({'status': 10021, 'message': 'parameter error'})
-    
+
     if eid != '' and phone == '':
         datas = []
         results = Guest.objects.filter(event_id=eid)
@@ -110,7 +168,9 @@ def get_guest_list(request):
                 guest['sign'] = r.sign
                 datas.append(guest)
             return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
-    
+        else:
+            return JsonResponse({'status': 10022, 'message': 'query result is empty'})
+
     if eid != '' and phone != '':
         guest = {}
         try:
@@ -123,7 +183,7 @@ def get_guest_list(request):
 
         except ObjectDoesNotExist:
             return JsonResponse({'status': 10022, 'message': 'query result is empty'})
-    
+
 
 def user_sign(request):
     eid = request.POST.get('eid', '')
@@ -131,15 +191,15 @@ def user_sign(request):
 
     if eid == '' or phone == '':
         return JsonResponse({'status': 10021, 'message': 'parameter error'})
-    
+
     result = Event.objects.filter(id=eid)
     if not result:
         return JsonResponse({'status': 10022, 'message': 'event id null'})
-    
+
     result = Event.objects.get(id=eid).status
     if not result:
         return JsonResponse({'status': 10023, 'message': 'event status is not available'})
-    
+
     event_time = Event.objects.get(id=eid).start_time
     etime = str(event_time).split(".")[0]
     timeArray = time.strptime(etime, r"%Y-%m-%d %H:%M:%S")
@@ -151,17 +211,17 @@ def user_sign(request):
 
     if n_time >= e_time:
         return JsonResponse({'status': 10024, 'message': 'event is out of date'})
-    
+
     result = Guest.objects.filter(phone=phone)
-    
+
     if not result:
         return JsonResponse({'status': 10025, 'message': 'user phone null'})
-    
+
     result = Guest.objects.filter(event_id=eid, phone=phone)
 
     if not result:
         return JsonResponse({'status': 10026, 'message': 'user did not participate in the event'})
-    
+
     result = Guest.objects.get(event_id=eid, phone=phone).sign
 
     if result:
