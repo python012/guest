@@ -109,7 +109,7 @@ def get_event_list(request):
                 event = {}
                 event['id'] = r.id
                 event['name'] = r.name
-                event['status'] = r.name
+                event['status'] = r.status
                 event['address'] = r.address
                 event['start_time'] = r.start_time
                 datas.append(event)
