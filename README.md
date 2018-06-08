@@ -27,4 +27,4 @@ Installed apps:
 
 ## Note for Testing
 
-- To support interface API test and avoid `CSRF varification failed` error, the line of `django.middleware.csrf.CsrfViewMiddleware` of MIDDLEWARE in `settings.py` is disalbed.
+- To support interface API test and avoid `CSRF varification failed` error, the line of `django.middleware.csrf.CsrfViewMiddleware` of MIDDLEWARE in `settings.py` is disabled.
