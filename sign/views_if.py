@@ -8,12 +8,12 @@ import time
 def add_event(request):
     eid = request.POST.get('eid', '')
     name = request.POST.get('name', '')
-    limit = request.POST.get('limit', '')
+    attendees_limit = request.POST.get('attendees_limit', '')
     status = request.POST.get('status', '')
     address = request.POST.get('address', '')
     start_time = request.POST.get('start_time', '')
 
-    if eid == '' or name == '' or limit == '' or address == '' or start_time == '':
+    if eid == '' or name == '' or attendees_limit == '' or address == '' or start_time == '':
         return JsonResponse({'status': 10021, 'message': 'parameter error'})
 
     result = Event.objects.filter(id=eid)
@@ -31,7 +31,7 @@ def add_event(request):
         Event.objects.create(id=eid,
                              name=name,
                              status=int(status),
-                             limit=limit,
+                             attendees_limit=attendees_limit,
                              address=address,
                              start_time=start_time)
     except ValidationError:
@@ -60,7 +60,7 @@ def add_guest(request):
     if not result:
         return JsonResponse({'status': 10023, 'message':'event status is not available'})
 
-    event_limit = Event.objects.get(id=eid).limit
+    event_limit = Event.objects.get(id=eid).attendees_limit
     guest_limit = len(Guest.objects.filter(event_id=eid))
 
     if guest_limit >= event_limit:

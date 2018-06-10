@@ -9,7 +9,7 @@ class ModelTest(TestCase):
         Event.objects.create(id=1,
                              name="iPhone X event",
                              status=True,
-                             limit=2000,
+                             attendees_limit=2000,
                              address='somewhere in USA',
                              start_time='2015-09-08 14:12:00')
         Guest.objects.create(id=1,
@@ -87,7 +87,7 @@ class EventManageTest(TestCase):
         User.objects.create_user('admin', 'admin@dj.com', 'admin123456')
         Event.objects.create(id=1,
                              name="Moto X",
-                             limit="1000",
+                             attendees_limit="1000",
                              address="Sunnyvale",
                              status=1,
                              start_time="2014-8-12 12:30:00")
@@ -114,7 +114,7 @@ class GuestManageTest(TestCase):
         User.objects.create_user('admin', 'admin@dj.com', 'admin123456')
         Event.objects.create(id=1,
                              name="Moto X",
-                             limit="1000",
+                             attendees_limit="1000",
                              address="Sunnyvale",
                              status=1,
                              start_time="2014-8-12 12:30:00")
@@ -146,13 +146,13 @@ class SignIndexActionTest(TestCase):
         User.objects.create_user('admin', 'admin@wi.com', 'admin123456')
         Event.objects.create(id=1,
                              name="Moto X Release",
-                             limit="1000",
+                             attendees_limit="1000",
                              address="Sunnyvale",
                              status=1,
                              start_time="2014-8-12 12:30:00")
         Event.objects.create(id=2,
                              name="iPhone X Release",
-                             limit="800",
+                             attendees_limit="800",
                              address="Pala Anto",
                              status=1,
                              start_time="2016-6-12 9:30:00")

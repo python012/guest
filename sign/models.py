@@ -13,7 +13,7 @@ class Event(models.Model):
     model for the Press Conference
     """
     name = models.CharField(max_length=100)             # 发布会标题
-    limit = models.IntegerField()                       # 参加人数
+    attendees_limit = models.IntegerField()             # 参加人数限制
     status = models.BooleanField()                      # 状态
     address = models.CharField(max_length=200)          # 地址
     start_time = models.DateTimeField('events time')    # 发布会开始时间
