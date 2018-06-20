@@ -126,6 +126,7 @@ def get_event_list(request):
                 return JsonResponse({'status': 10023, 'message': 'event status is not available'})
             else:
                 if not name:
+                    datas = []
                     r = Event.objects.get(id=eid)
                     event = {}
                     event['id'] = r.id
@@ -133,7 +134,8 @@ def get_event_list(request):
                     event['status'] = r.status
                     event['address'] = r.address
                     event['start_time'] = r.start_time
-                    return JsonResponse({'status': 200, 'message': event})
+                    datas.append(event)
+                    return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
                 else:
                     results = Event.objects.filter(id=eid, name=name)
                     if not len(results):

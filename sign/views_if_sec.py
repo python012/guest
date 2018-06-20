@@ -31,7 +31,7 @@ def _user_sign(request):
         return 'timeout'
     
     # check signature
-    api_key = '&2018FIFAWorldCup'
+    api_key = '2018FIFAWorldCup'
     md5 = hashlib.md5()
     sign_str = client_time + api_key
     sign_bytes_utf8 = sign_str.encode(encoding='utf-8')
@@ -70,7 +70,7 @@ def add_event(request):
         return JsonResponse({'status':10013, 'message':'user sign timeout'})
     elif sign_result == 'sign fail':
         return JsonResponse({'status':10014, 'message':'user sign error'})
-    add_event_in_views_if(request)
+    return add_event_in_views_if(request)
 
 
 def get_event_list(request):
@@ -80,4 +80,4 @@ def get_event_list(request):
     
     if auth_result == 'fail':
         return JsonResponse({'status':10012, 'message':'user auth fail'})
-    get_event_list_in_views_if(request)
+    return get_event_list_in_views_if(request)
