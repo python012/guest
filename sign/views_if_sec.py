@@ -1,7 +1,47 @@
+import base64
+import hashlib
+import time
+
 from django.contrib import auth as django_auth
 from django.http import JsonResponse
-import base64
+
 from sign.models import Event
+from sign.views_if import add_event as add_event_in_views_if
+from sign.views_if import get_event_list as get_event_list_in_views_if
+
+
+def _user_sign(request):
+    '''user signature and timestamp'''
+    if request.method == 'POST':
+        client_time = request.POST.get('time', '')
+        client_sign = request.POST.get('sign', '')
+    else:
+        return 'error'
+    
+    if client_time == '' or client_sign == '':
+        return 'sign null'
+    
+    # server time
+    now_time = time.time()
+    server_time = str(now_time).split('.')[0]
+    
+    # check the time diff
+    time_diff = int(server_time) - int(client_time)
+    if time_diff >= 60:
+        return 'timeout'
+    
+    # check signature
+    api_key = '&2018FIFAWorldCup'
+    md5 = hashlib.md5()
+    sign_str = client_time + api_key
+    sign_bytes_utf8 = sign_str.encode(encoding='utf-8')
+    md5.update(sign_bytes_utf8)
+    server_sign = md5.hexdigest()
+
+    if server_sign != client_sign:
+        return 'sign fail'
+    else:
+        return 'sign success'
 
 
 def _user_auth(request):
@@ -20,6 +60,19 @@ def _user_auth(request):
         return 'fail'
 
 
+def add_event(request):
+    sign_result = _user_sign(request)
+    if sign_result == 'error':
+        return JsonResponse({'status':10011, 'message':'request error'})
+    elif sign_result == 'sign null':
+        return JsonResponse({'status':10012, 'message':'user sign null'})
+    elif sign_result == 'timeout':
+        return JsonResponse({'status':10013, 'message':'user sign timeout'})
+    elif sign_result == 'sign fail':
+        return JsonResponse({'status':10014, 'message':'user sign error'})
+    add_event_in_views_if(request)
+
+
 def get_event_list(request):
     auth_result = _user_auth(request)
     if auth_result == 'null':
@@ -27,58 +80,4 @@ def get_event_list(request):
     
     if auth_result == 'fail':
         return JsonResponse({'status':10012, 'message':'user auth fail'})
-    
-    eid = request.GET.get('eid', '')
-    name = request.GET.get('name', '')
-    if not eid:
-        if not name:
-            return JsonResponse({'status': 10021, 'message': 'parameter error'})
-
-        results = Event.objects.filter(name__contains=name)
-
-        if not len(results):
-            return JsonResponse({'status': 10022, 'message': 'query result is empty'})
-        else:
-            datas = []
-            for r in results:
-                event = {}
-                event['id'] = r.id
-                event['name'] = r.name
-                event['status'] = r.status
-                event['address'] = r.address
-                event['start_time'] = r.start_time
-                datas.append(event)
-            return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
-    else:
-        result = Event.objects.get(id=eid)
-        if not result:
-            return JsonResponse({'status': 10022, 'message': 'query result is empty'})
-        else:
-            result = Event.objects.get(id=eid).status
-            if not result:
-                return JsonResponse({'status': 10023, 'message': 'event status is not available'})
-            else:
-                if not name:
-                    r = Event.objects.get(id=eid)
-                    event = {}
-                    event['id'] = r.id
-                    event['name'] = r.name
-                    event['status'] = r.status
-                    event['address'] = r.address
-                    event['start_time'] = r.start_time
-                    return JsonResponse({'status': 200, 'message': 'success', 'data': event})
-                else:
-                    results = Event.objects.filter(id=eid, name=name)
-                    if not len(results):
-                        return JsonResponse({'status': 10022, 'message': 'query result is empty'})
-                    else:
-                        datas = []
-                        for r in results:
-                            event = {}
-                            event['id'] = r.id
-                            event['name'] = r.name
-                            event['status'] = r.status
-                            event['address'] = r.address
-                            event['start_time'] = r.start_time
-                            datas.append(event)
-                        return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
+    get_event_list_in_views_if(request)

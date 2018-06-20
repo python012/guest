@@ -1,6 +1,7 @@
-from django.test import TestCase
-from sign.models import Event, Guest
 from django.contrib.auth.models import User
+from django.test import TestCase
+
+from sign.models import Event, Guest
 
 
 class ModelTest(TestCase):

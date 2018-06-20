@@ -2,7 +2,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 
 from sign.models import Event, Guest
 

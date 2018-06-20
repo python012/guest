@@ -1,8 +1,10 @@
-from django.http import JsonResponse
-from sign.models import Event, Guest
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
-from django.db.utils import IntegrityError
 import time
+
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db.utils import IntegrityError
+from django.http import JsonResponse
+
+from sign.models import Event, Guest
 
 
 def add_event(request):
