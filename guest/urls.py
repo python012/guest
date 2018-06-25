@@ -15,7 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from sign import views
+from sign import views, views_if_rest
+
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'users', views_if_rest.UserViewSet)
+router.register(r'groups', views_if_rest.GroupViewSet)
+router.register(r'events', views_if_rest.EventViewSet)
+router.register(r'guests', views_if_rest.GuestViewSet)
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -31,4 +40,6 @@ urlpatterns = [
     url(r'^sign_index_action/(?P<eid>[0-9]+)/$', views.sign_index_action),
     url(r'^logout/$', views.logout),
     url(r'^api/', include('sign.urls', namespace="sign")),
+    url(r'^', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
