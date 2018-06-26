@@ -28,3 +28,22 @@ Installed apps:
 ## Note for Testing
 
 - To support interface API test and avoid `CSRF varification failed` error, the line of `django.middleware.csrf.CsrfViewMiddleware` of MIDDLEWARE in `settings.py` is disabled.
+- Django rest framework is imported to implement interface API, try this(with HTTPie):
+``` bash
+C:\Users\admin>http -a admin:admin01234 http://127.0.0.1:8000/rest/
+HTTP/1.1 200 OK
+Allow: GET, HEAD, OPTIONS
+Content-Length: 183
+Content-Type: application/json
+Date: Tue, 26 Jun 2018 09:01:51 GMT
+Server: WSGIServer/0.2 CPython/3.6.4
+Vary: Accept, Cookie
+X-Frame-Options: SAMEORIGIN
+
+{
+    "events": "http://127.0.0.1:8000/rest/events/",
+    "groups": "http://127.0.0.1:8000/rest/groups/",
+    "guests": "http://127.0.0.1:8000/rest/guests/",
+    "users": "http://127.0.0.1:8000/rest/users/"
+}
+```

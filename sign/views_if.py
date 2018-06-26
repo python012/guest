@@ -3,10 +3,12 @@ import time
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from sign.models import Event, Guest
 
 
+@csrf_exempt
 def add_event(request):
     eid = request.POST.get('eid', '')
     name = request.POST.get('name', '')
@@ -43,6 +45,7 @@ def add_event(request):
     return JsonResponse({'status': 200, 'message': 'add event success'})
 
 
+@csrf_exempt
 def add_guest(request):
     eid = request.POST.get('eid', '')
     realname = request.POST.get('realname', '')
@@ -93,6 +96,7 @@ def add_guest(request):
     return JsonResponse({'status': 200, 'message': 'add event success'})
 
 
+@csrf_exempt
 def get_event_list(request):
     eid = request.GET.get('eid', '')
     name = request.GET.get('name', '')
@@ -153,6 +157,7 @@ def get_event_list(request):
                         return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
 
 
+@csrf_exempt
 def get_guest_list(request):
     eid = request.GET.get('eid', '')
     phone = request.GET.get('phone', '')
@@ -189,6 +194,7 @@ def get_guest_list(request):
             return JsonResponse({'status': 10022, 'message': 'query result is empty'})
 
 
+@csrf_exempt
 def user_sign(request):
     eid = request.POST.get('eid', '')
     phone = request.POST.get('phone', '')

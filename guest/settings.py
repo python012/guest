@@ -39,18 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sign',
     'bootstrap3',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware', # debugging for interface testing
+    'django.middleware.csrf.CsrfViewMiddleware', # debugging for interface testing
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'rest_framework',
-    'sign',
 ]
 
 ROOT_URLCONF = 'guest.urls'
@@ -82,11 +81,11 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '--------',
+        'HOST': '---------',
         'PORT': '3306',
         'NAME': 'guest_test01',
         'USER': 'root',
-        'PASSWORD': '-----',
+        'PASSWORD': '---------',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },

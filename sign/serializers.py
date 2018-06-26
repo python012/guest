@@ -3,7 +3,6 @@ from rest_framework import serializers
 from sign.models import Event, Guest
 
 
-
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User

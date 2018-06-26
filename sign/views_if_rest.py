@@ -1,11 +1,8 @@
 from django.contrib.auth.models import Group, User
-from django.shortcuts import render
 from rest_framework import viewsets
 
 from sign.models import Event, Guest
-from sign.serializers import (EventSerializer, GroupSerializer, GuestSerializer,
-                             UserSerializer)
-
+from sign.serializers import EventSerializer, GroupSerializer, GuestSerializer, UserSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     """
